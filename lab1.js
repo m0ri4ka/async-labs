@@ -1,18 +1,16 @@
 const asyncMap = (array, callback, finalCallback) => {
-    const result = [];
+    const results = [];
+    const errors = [];
     let counter = 0;
     array.forEach((item, index) => {
         callback(item, (error, value) => {
-            if (error) {
-                result.push(null);
-                console.error(`Error at index ${index}`);
-            }
-            else {
-                result.push(value);
-            }
+            if (error)
+                errors.push(`Error at index ${index}`)
+            else
+                results.push(value);
             counter++;
             if (counter === array.length)
-                finalCallback(result);
+                finalCallback(errors, results);
         })
     })
 }
@@ -26,8 +24,8 @@ const demo = () => {
                 callback(null, number * 2);
         }, 1500);
     }
-    asyncMap(numbers, asyncDouble, result => {
-        console.log(result);
+    asyncMap(numbers, asyncDouble, (errors, results) => {
+        console.log(errors, results);
     });
 }
 demo();
